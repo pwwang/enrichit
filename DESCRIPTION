@@ -22,7 +22,8 @@ LazyData: true
 Suggests:
     knitr,
     rmarkdown,
-    scplotter
+    scplotter,
+    ggwordcloud
 Remotes:
     pwwang/scplotter
 VignetteBuilder: knitr
