@@ -121,6 +121,7 @@ CheckUserList <- function(userlist, genesets, use_matched_only, show_all_unmatch
 #' * Combined.Score: Combined score from the enrichment test
 #' * Genes: Genes in the user list that are also in the gene set
 #' * Rank: Rank of the term based on the combined score
+#'
 #' When `style` is "clusterProfiler", the columns are:
 #' * ID: Name of the term
 #' * Description: Description of the term

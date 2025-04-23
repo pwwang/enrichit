@@ -64,7 +64,10 @@ When \code{style} is "enrichr", the columns are:
 \item Combined.Score: Combined score from the enrichment test
 \item Genes: Genes in the user list that are also in the gene set
 \item Rank: Rank of the term based on the combined score
+}
+
 When \code{style} is "clusterProfiler", the columns are:
+\itemize{
 \item ID: Name of the term
 \item Description: Description of the term
 \item GeneRatio: Ratio of genes in the user list and the gene set

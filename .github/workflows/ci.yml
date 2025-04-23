@@ -50,7 +50,7 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
 
-      - name: Install plotthis
+      - name: Install enrichit
         run: |
           devtools::install_local(force = TRUE)
 
