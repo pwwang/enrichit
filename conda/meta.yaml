@@ -1,0 +1,38 @@
+package:
+  name: r-enrichit
+  version: 0.0.1
+
+source:
+  path: ..
+
+build:
+  number: 1
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  host:
+    - r-base
+    - r-digest
+    - r-httr
+    - r-rlang
+    - bioconductor-qvalue
+
+  run:
+    - r-base
+    - r-digest
+    - r-httr
+    - r-rlang
+    - bioconductor-qvalue
+
+test:
+  commands:
+    - $R -e "library('enrichit')"
+
+about:
+  home: https://github.com/pwwang/enrichit
+  license: MIT
+  summary: Gene Set Over-Representation Enrichment Analysis.
+  license_family: MIT
+  license_file: LICENSE.md
