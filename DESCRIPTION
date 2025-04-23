@@ -15,6 +15,7 @@ Imports:
     stats,
     digest,
     qvalue,
+    httr,
     rlang
 Depends:
     R (>= 3.5)
