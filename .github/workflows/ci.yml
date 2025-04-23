@@ -46,11 +46,7 @@ jobs:
         with:
           cache-version: 2
           extra-packages: |
-            any::devtools, any::pkgdown, any::rmarkdown, any::knitr
-
-      - name: Install scplotter
-        run: |
-          Rscript -e "remotes::install_github('pwwang/scplotter')"
+            any::devtools, any::pkgdown, any::rmarkdown, any::knitr, any::scplotter
 
       - uses: r-lib/actions/check-r-package@v2
 
