@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(enrichit)
+# devtools::install_github("pwwang/scplotter")
 library(scplotter)
 ```
 
