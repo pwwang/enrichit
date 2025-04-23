@@ -1,0 +1,166 @@
+---
+title: "over-representation_enrichment_analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{over-representation_enrichment_analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(enrichit)
+library(scplotter)
+```
+
+# Introduction
+
+This vignette demonstrates how to perform over-representation enrichment analysis using the `enrichit` package. The package provides a convenient way to analyze gene sets against custom gene sets (GMT files) and supports both `clusterProfiler` and `enrichr` styles of analysis.
+
+The package is designed to work offline, making it suitable for environments with limited internet access. Additionally, it seamlessly integrates with the [`scplotter`](https://github.com/pwwang/scplotter) package for visualization.
+
+# Installation
+You can install the development version of `enrichit` from GitHub with:
+
+```{r, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("pwwang/enrichit")
+# remotes::install_github("pwwang/enrichit")
+```
+
+# Data preparation
+
+## Load example data
+
+The example data used in this vignette is included in the package. You can load it using the following command:
+
+```{r}
+data(userlist)
+```
+
+For this example, we will use the `userlist` data, which contains a list of genes of interest. The data is a character vector of gene symbols. You can replace this with your own gene list. They don't have to be gene symbols, but they should match the gene names in the GMT files you are using for analysis.
+
+## Load GMT files
+
+The `enrichit` package comes with built-in GMT files for BioCarta, GO, KEGG, MSigDB Hallmark, Reactome pathways and WikiPathways. You can find these files in the `extdata` directory of the package. You can find more public GMT files in the [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/) database or the [`enrichr`](https://maayanlab.cloud/Enrichr/) database. You can also use your own custom GMT files.
+
+To load the GMT files, you can use the following commands:
+
+```{r}
+
+kegg_gmt <- system.file("extdata", "KEGG_2021_Human.gmt.gz", package = "enrichit")
+hallmark_gmt <- system.file("extdata", "MSigDB_Hallmark_2020.gmt.gz", package = "enrichit")
+
+pathways <- ParseGMT(kegg_gmt)
+pathways[1:2]
+```
+
+Specifying a URL of a GMT file is also supported. For example, you can use the following command to load a GMT file from a URL:
+
+```{r}
+# gmt_url <- "https://example.com/path/to/your/gmt/file.gmt"
+# pathways <- ParseGMT(gmt_url)
+```
+
+Additionally, you can also use a name of a library from the [`enrichr`](https://maayanlab.cloud/Enrichr/) database to load the GMT file. If they are one of the built-in libraries (`BioCarta`, `BioCarta_2016`, `GO_Biological_Process`, `GO_Biological_Process_2025`, `GO_Cellular_Component`, `GO_Cellular_Component_2025`, `GO_Molecular_Function`, `GO_Molecular_Function_2025`, `KEGG`, `KEGG_2021`, `KEGG_Human`, `KEGG_2021_Human`, `Hallmark`, `MSigDB_Hallmark`, `MSigDB_Hallmark_2020`, `Reactome`, `Reactome_Pathways`, `Reactome_Pathways_2024`, `WikiPathways`, `WikiPathways_2024`), the GMT file will be loaded from the package. Otherwise, it will be downloaded from the [`enrichr`](https://maayanlab.cloud/Enrichr/) database [library](https://maayanlab.cloud/Enrichr/#libraries).
+
+```{r}
+# Load built-in libraries
+library_name <- "MSigDB_Hallmark"
+hallmarks <- ParseGMT(library_name)
+hallmarks[1:2]
+```
+
+```{r}
+# Load from enrichr library using name
+library_name <- "ChEA_2022"
+chea <- ParseGMT(library_name)
+chea[1:2]
+```
+
+# Enrichment analysis
+
+## Single gene set database
+
+```{r}
+# pathways was loaded previously
+# pathways = ParseGMT(kegg_gmt)
+
+head(EnrichIt(userlist, pathways), n = 3)
+```
+
+You can also specify the GMT file path directly:
+
+```{r}
+# kegg_gmt <- system.file("extdata", "KEGG_2021_Human.gmt.gz", package = "enrichit")
+head(EnrichIt(userlist, kegg_gmt), n = 3)
+```
+
+You may notice that the values of the `Database` column is different. We keep that column to support enrichment analysis against multiple databases. When no database is specified (the first `EnrichIt` example), the argument name (`pathways`) is used as the database name. When a GMT file is specified (the second `EnrichIt` example), the GMT file name is used as the database name. You can also explictly specify the database name:
+
+```{r}
+head(EnrichIt(userlist, list(KEGG = pathways)), n = 3)
+```
+
+## Multiple gene set databases
+
+You can also perform enrichment analysis against multiple gene set databases at once. To specify multiple databases, you can pass a **vector** of GMT file paths or a named **vector** of GMT files to the `EnrichIt` function. The names of the vector will be used as the database names in the output. If you have pre-parsed GMT from the [`ParseGMT`](https://pwwang.github.io/enrichit/reference/ParseGMT.html) function, you can pass a named list of parsed GMT files to the `EnrichIt` function. The names of the list will be used as the database names in the output.
+
+```{r}
+# kegg_gmt <- system.file("extdata", "KEGG_2021_Human.gmt.gz", package = "enrichit")
+# hallmark_gmt <- system.file("extdata", "MSigDB_Hallmark_2020.gmt.gz", package = "enrichit")
+
+res <- EnrichIt(userlist, c(kegg_gmt, hallmark_gmt))
+head(res[res$Database == "KEGG_2021_Human", ], n = 3)
+```
+
+```{r}
+head(res[res$Database == "MSigDB_Hallmark_2020", ], n = 3)
+```
+
+```{r}
+res <- EnrichIt(userlist, list(KEGG = ParseGMT(kegg_gmt), Hallmark = ParseGMT(hallmark_gmt)))
+head(res[res$Database == "KEGG", ], n = 3)
+```
+
+```{r}
+head(res[res$Database == "Hallmark", ], n = 3)
+```
+
+## Generate `clusterProfiler` style result
+
+The `EnrichIt` function can also generate results in the `clusterProfiler` style. To do this, you can set the `style` argument to `"clusterProfiler"`.
+
+```{r}
+
+head(EnrichIt(userlist, kegg_gmt, style = "clusterProfiler"), n = 3)
+```
+
+# Visualization
+
+The result of the `EnrichIt` function can be visualized using the `EnrichmentPlot` function from the [`scplotter`](https://github.com/pwwang/scplotter) package. The `EnrichmentPlot` function supports various plot types, including bar plots, dot plots, network plots, word clouds, etc.
+
+```{r, fig.width = 12, fig.height = 5}
+res <- EnrichIt(userlist, c(kegg_gmt, hallmark_gmt), style = "clusterProfiler")
+
+EnrichmentPlot(res, split_by = "Database")
+```
+
+```{r, fig.width = 15, fig.height = 5}
+EnrichmentPlot(res, plot_type = "dot", split_by = "Database")
+```
+
+```{r, fig.width = 10, fig.height = 6}
+kegg_res <- res[res$Database == "KEGG_2021_Human", ]
+EnrichmentPlot(kegg_res, plot_type = "network")
+```
+
+```{r, fig.width = 7, fig.height = 4.5}
+EnrichmentPlot(kegg_res, plot_type = "wordcloud")
+```

@@ -1,0 +1,14 @@
+url: https://pwwang.github.io/enrichit/
+template:
+  bootstrap: 5
+  bootswatch: lumen
+reference:
+  - title: "Reference"
+    description: "Reference manual for the package"
+    contents:
+    - ParseGMT
+    - EnrichIt
+  - title: "Data"
+    description: "The built-in data used in the package"
+    contents:
+    - userlist

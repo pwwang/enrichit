@@ -1,0 +1,25 @@
+Package: enrichit
+Title: Gene Set Over-Representation Enrichment Analysis
+Version: 0.0.1
+Authors@R:
+    person("Panwen", "Wang", email = "pwwang@pwwang.com", role = c("aut", "cre"))
+Description: Provides tools for gene set enrichment analysis using Fisher's exact test
+    and a combined score approach that takes into account the expected rank distribution
+    of gene sets. The package allows parsing of GMT files and performing over-representation
+    analysis with robust statistical evaluation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    stats,
+    digest,
+    qvalue,
+    rlang
+Depends:
+    R (>= 3.5)
+LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

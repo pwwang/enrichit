@@ -1,0 +1,15 @@
+^LICENSE\.md$
+^CRAN-SUBMISSION$
+^cran-comments\.md$
+^_pkgdown\.yml$
+^\.github\/.*
+^\.github$
+^conda\/.*
+^conda$
+^docs\/.*
+^docs$
+^pkgdown\/.*
+^pkgdown$
+^test\.ipynb$
+^.+\.Rcheck/.+$
+^.+\.tar\.gz$

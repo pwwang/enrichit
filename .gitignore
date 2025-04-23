@@ -1,0 +1,7 @@
+/test.ipynb
+docs/
+CRAN-SUBMISSION
+cran-comments.md
+*.Rcheck/
+enrichit_*.tar.gz
+inst/doc
