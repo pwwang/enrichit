@@ -1,5 +1,5 @@
 ---
-title: "over-representation_enrichment_analysis"
+title: "Over-representation Enrichment Analysis"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{over-representation_enrichment_analysis}
