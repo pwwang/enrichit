@@ -9,8 +9,14 @@ ParseGMT(gmtfile, swap_name_desc_if_needed = TRUE)
 \arguments{
 \item{gmtfile}{Path to the GMT file}
 
-\item{swap_name_desc_if_needed}{Logical, whether to swap name and description fields
-if all descriptions are shorter than names.}
+\item{swap_name_desc_if_needed}{Logical, whether to swap name and description fields.
+They will be swapped only if:
+\itemize{
+\item \code{swap_name_desc_if_needed} is \code{TRUE}; and
+\item The descriptions are not empty; and
+\item The descriptions are shorter than the names; and
+\item The descriptions are not ID-like (i.e., hsa00001, or 123456).
+}}
 }
 \value{
 A list of gene sets, the names of the list are the gene set names,

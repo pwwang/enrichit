@@ -120,8 +120,12 @@ FetchGMT <- function(gmtpath) {
 #' Read GMT file
 #'
 #' @param gmtfile Path to the GMT file
-#' @param swap_name_desc_if_needed Logical, whether to swap name and description fields
-#' if all descriptions are shorter than names.
+#' @param swap_name_desc_if_needed Logical, whether to swap name and description fields.
+#' They will be swapped only if:
+#' * `swap_name_desc_if_needed` is `TRUE`; and
+#' * The descriptions are not empty; and
+#' * The descriptions are shorter than the names; and
+#' * The descriptions are not ID-like (i.e., hsa00001, or 123456).
 #' @return A list of gene sets, the names of the list are the gene set names,
 #' and each element is a vector of gene names.
 #' @export
@@ -154,7 +158,14 @@ ParseGMT <- function(gmtfile, swap_name_desc_if_needed = TRUE) {
     # Swap name and desc if needed
     name_nchars <- vapply(libraries, function(lib) nchar(lib$name), integer(1))
     desc_nchars <- vapply(libraries, function(lib) nchar(lib$desc), integer(1))
-    if (swap_name_desc_if_needed && all(desc_nchars > 0) && all(desc_nchars < name_nchars)) {
+    desc_prefix <- sub("[0-9]+$", "", libraries[[1]]$desc)
+    desc_are_ids <- vapply(libraries, function(lib) startsWith(lib$desc, desc_prefix) | grepl("^[0-9]+$", lib$desc), logical(1))
+    if (
+        swap_name_desc_if_needed &&
+        all(desc_nchars > 0) &&
+        all(desc_nchars < name_nchars) &&
+        !all(desc_are_ids)
+    ) {
         warning("Swapping name and desc fields in GMT file, as desc is shorter. Set 'swap_name_desc_if_needed' to FALSE to disable this.")
         libraries <- lapply(libraries, function(lib) {
             tmp <- lib$name
