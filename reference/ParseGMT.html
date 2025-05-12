@@ -53,8 +53,12 @@
 
 
 <dt id="arg-swap-name-desc-if-needed">swap_name_desc_if_needed<a class="anchor" aria-label="anchor" href="#arg-swap-name-desc-if-needed"></a></dt>
-<dd><p>Logical, whether to swap name and description fields
-if all descriptions are shorter than names.</p></dd>
+<dd><p>Logical, whether to swap name and description fields.
+They will be swapped only if:</p><ul><li><p><code>swap_name_desc_if_needed</code> is <code>TRUE</code>; and</p></li>
+<li><p>The descriptions are not empty; and</p></li>
+<li><p>The descriptions are shorter than the names; and</p></li>
+<li><p>The descriptions are not ID-like (i.e., hsa00001, or 123456).</p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">
@@ -84,7 +88,7 @@ and each element is a vector of gene names.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
 </div>
 
     </footer></div>
