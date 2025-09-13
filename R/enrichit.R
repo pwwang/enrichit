@@ -172,7 +172,7 @@ EnrichIt <- function(
         db <- dbs[[db_name]]
         db_gene_count <- length(unique(unlist(db)))
         background <- background %||% ifelse(style == "enrichr", max(20000, db_gene_count), db_gene_count)
-        background <- 10922
+        # background <- 10922
         ul <- CheckUserList(userlist, db, use_matched_only = use_matched_only)
         res <- lapply(seq_along(db), function(i) {
             term_name <- names(db)[i]
