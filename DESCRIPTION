@@ -1,6 +1,6 @@
 Package: enrichit
 Title: Gene Set Over-Representation Enrichment Analysis
-Version: 0.0.2
+Version: 0.0.3
 Authors@R:
     person("Panwen", "Wang", email = "pwwang@pwwang.com", role = c("aut", "cre"))
 Description: Provides tools for gene set enrichment analysis using Fisher's exact test
