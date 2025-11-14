@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">enrichit</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,47 +50,61 @@
 
 
 <dl><dt id="arg-gmtpath">gmtpath<a class="anchor" aria-label="anchor" href="#arg-gmtpath"></a></dt>
-<dd><p>Path to the GMT file
-Either a local file path or a URL.
-If a URL is provided, the file will be downloaded and cached.
-If a local file path is provided, it will be checked for existence.
-It can also be a name of a library from the Enrichr database.
-See https://maayanlab.cloud/Enrichr/#libraries.</p></dd>
+<dd><p>Path to the GMT file.
+Can be one of the following:</p><ul><li><p>A local file path (will be checked for existence)</p></li>
+<li><p>A URL starting with http:// or https:// (will be downloaded and cached)</p></li>
+<li><p>A built-in library name (e.g., "KEGG", "GO_Biological_Process", "Reactome")</p></li>
+<li><p>An Enrichr library name (e.g., "ChEA_2016", "GWAS_Catalog_2019")</p></li>
+</ul><p>Built-in libraries include:</p><ul><li><p>"BioCarta" or "BioCarta_2016"</p></li>
+<li><p>"GO_Biological_Process" or "GO_Biological_Process_2025"</p></li>
+<li><p>"GO_Cellular_Component" or "GO_Cellular_Component_2025"</p></li>
+<li><p>"GO_Molecular_Function" or "GO_Molecular_Function_2025"</p></li>
+<li><p>"KEGG", "KEGG_Human", "KEGG_2021", or "KEGG_2021_Human"</p></li>
+<li><p>"Hallmark", "MSigDB_Hallmark", or "MSigDB_Hallmark_2020"</p></li>
+<li><p>"Reactome", "Reactome_Pathways", or "Reactome_Pathways_2024"</p></li>
+<li><p>"WikiPathways", "WikiPathways_2024", "WikiPathways_Human", or "WikiPathways_2024_Human"</p></li>
+</ul><p>For Enrichr libraries, see https://maayanlab.cloud/Enrichr/#libraries</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If <code>gmtpath</code> is a local file, it returns the path.
-If <code>gmtpath</code> is a URL, it downloads the file to a temporary cache
-directory if not already present and returns the path to the cached file.</p>
+    <p>The path to the GMT file (local, built-in, or cached).
+If <code>gmtpath</code> is a URL or Enrichr library, the file is downloaded to a cache
+directory if not already present and the path to the cached file is returned.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Use a built-in library</span></span></span>
+<span class="r-in"><span><span class="fu">FetchGMT</span><span class="op">(</span><span class="st">"KEGG"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">FetchGMT</span><span class="op">(</span><span class="st">"GO_Biological_Process"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Fetch from Enrichr by library name</span></span></span>
+<span class="r-in"><span><span class="fu">FetchGMT</span><span class="op">(</span><span class="st">"ChEA_2016"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">FetchGMT</span><span class="op">(</span><span class="st">"GWAS_Catalog_2019"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fetch a GMT file from a URL (will be cached)</span></span></span>
 <span class="r-in"><span><span class="va">gmtpath_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"https://maayanlab.cloud/Enrichr/geneSetLibrary?mode=text&amp;libraryName="</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"Data_Acquisition_Method_Most_Popular_Genes"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">FetchGMT</span><span class="op">(</span><span class="va">gmtpath_url</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Example output: ~/.cache/enrichit/xxxxxx.gmt</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">FetchGMT</span><span class="op">(</span><span class="st">"Data_Acquisition_Method_Most_Popular_Genes"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Example output: ~/.cache/enrichit/xxxxxx.gmt</span></span></span>
+<span class="r-in"><span><span class="va">gmt_file_url</span> <span class="op">&lt;-</span> <span class="fu">FetchGMT</span><span class="op">(</span><span class="va">gmtpath_url</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Example output: ~/.cache/enrichit/xxxxxxxx/Data_Acquisition_Method_Most_Popular_Genes.gmt</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fetching the same URL again uses the cache</span></span></span>
 <span class="r-in"><span><span class="va">gmt_file_url_cached</span> <span class="op">&lt;-</span> <span class="fu">FetchGMT</span><span class="op">(</span><span class="va">gmtpath_url</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Should be the same path as gmt_file_url</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">gmt_file_url</span>, <span class="va">gmt_file_url_cached</span><span class="op">)</span><span class="op">)</span> <span class="co"># TRUE</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># If the GMT file is local</span></span></span>
-<span class="r-in"><span><span class="co"># Create a dummy local file for example</span></span></span>
+<span class="r-in"><span><span class="co"># Use a local GMT file</span></span></span>
 <span class="r-in"><span><span class="va">local_gmt_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".gmt"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GENESET1\tdesc1\tGENE1\tGENE2"</span>, <span class="st">"GENESET2\tdesc2\tGENE3\tGENE4"</span><span class="op">)</span>, <span class="va">local_gmt_path</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"GENESET1\tdesc1\tGENE1\tGENE2"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"GENESET2\tdesc2\tGENE3\tGENE4"</span></span></span>
+<span class="r-in"><span><span class="op">)</span>, <span class="va">local_gmt_path</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">FetchGMT</span><span class="op">(</span><span class="va">local_gmt_path</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Example output: /tmp/RtmpXXXXXX/filexxxx.gmt (original path)</span></span></span>
+<span class="r-in"><span><span class="co"># Returns: /tmp/RtmpXXXXXX/filexxxx.gmt (original path)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
@@ -104,7 +118,7 @@ directory if not already present and returns the path to the cached file.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
